@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulateur Intérêts Composés 2025 – Calculez votre capital final</title>
+  <meta name="description" content="Calculez gratuitement l'évolution de votre épargne grâce aux intérêts composés. Simulez capital initial, versements mensuels, taux et durée. Résultats instantanés avec graphique." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://votre-domaine.fr/simulateur-interets-composes" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Simulateur Intérêts Composés – Calculez votre capital final" />
+  <meta property="og:description" content="Simulez l'évolution de votre épargne avec les intérêts composés. Gratuit, instantané, sans inscription." />
+  <meta property="og:type" content="website" />
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Simulateur Intérêts Composés",
+    "description": "Calculateur gratuit pour simuler la croissance de votre épargne grâce aux intérêts composés.",
+    "applicationCategory": "FinanceApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" }
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f8f7f4;
+      --surface: #ffffff;
+      --surface2: #f2f0ec;
+      --border: rgba(0,0,0,0.09);
+      --text: #1a1a18;
+      --muted: #6b6b66;
+      --accent: #1D9E75;
+      --accent2: #378ADD;
+      --radius: 12px;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* HEADER */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+    }
+    .header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 56px;
+      gap: 8px;
+    }
+    .logo {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+
+    /* HERO */
+    .hero {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(28px, 5vw, 44px);
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+    .hero p {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto;
+    }
+
+    /* MAIN LAYOUT */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* SIMULATOR CARD */
+    .sim-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin: 32px 0;
+    }
+
+    .sim-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 32px;
+    }
+
+    @media (max-width: 600px) {
+      .sim-grid { grid-template-columns: 1fr; }
+      .sim-card { padding: 20px; }
+      .results-grid { grid-template-columns: 1fr !important; }
+    }
+
+    .field-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    .field-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .field-row input[type="range"] {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 4px;
+      background: var(--surface2);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    .field-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--text);
+      cursor: pointer;
+    }
+    .field-row input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--text);
+      border: none;
+      cursor: pointer;
+    }
+    .field-val {
+      font-size: 15px;
+      font-weight: 500;
+      min-width: 90px;
+      text-align: right;
+      color: var(--text);
+    }
+
+    /* RESULTS */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 28px 0 0;
+    }
+    .result-box {
+      background: var(--surface2);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+    .result-box-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .result-box-val {
+      font-family: var(--serif);
+      font-size: 26px;
+      color: var(--text);
+    }
+    .result-box-val.green { color: var(--accent); }
+
+    /* CHART */
+    .chart-section {
+      margin-top: 32px;
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+    }
+    .chart-legend {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .chart-legend span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .chart-legend b {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+    .chart-wrap {
+      position: relative;
+      width: 100%;
+      height: 260px;
+    }
+
+    /* SEO CONTENT */
+    .content-section {
+      margin: 0 0 40px;
+    }
+    .content-section h2 {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+    .content-section h3 {
+      font-size: 18px;
+      font-weight: 500;
+      margin: 24px 0 10px;
+      color: var(--text);
+    }
+    .content-section p {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .content-section ul {
+      list-style: none;
+      padding: 0;
+    }
+    .content-section ul li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+      display: flex;
+      gap: 10px;
+    }
+    .content-section ul li::before {
+      content: "→";
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* FORMULA BOX */
+    .formula-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      border-radius: 8px;
+      padding: 18px 20px;
+      margin: 16px 0;
+      font-family: monospace;
+      font-size: 15px;
+      color: var(--text);
+    }
+
+    /* FAQ */
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+      padding: 18px 0;
+    }
+    .faq-q {
+      font-weight: 500;
+      font-size: 16px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .faq-a {
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    /* CTA */
+    .cta-box {
+      background: var(--text);
+      border-radius: var(--radius);
+      padding: 32px;
+      text-align: center;
+      margin: 40px 0;
+    }
+    .cta-box h2 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+    .cta-box p {
+      color: rgba(255,255,255,0.65);
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 15px;
+      transition: opacity 0.15s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* ADSENSE PLACEHOLDER */
+    .ad-placeholder {
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      color: var(--muted);
+      margin: 28px 0;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="/">Calculateur<span>.fr</span></a>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Simulateur d'intérêts composés</h1>
+  <p>Découvrez combien votre épargne peut valoir dans le temps, selon votre capital, vos versements et votre taux de rendement.</p>
+</div>
+
+<main>
+
+  <!-- SIMULATOR -->
+  <div class="sim-card">
+    <div class="sim-grid">
+      <div>
+        <div class="field-label">Capital initial</div>
+        <div class="field-row">
+          <input type="range" id="s_capital" min="0" max="100000" step="500" value="10000" />
+          <span class="field-val"><span id="o_capital">10 000</span> €</span>
+        </div>
+        <div class="field-label">Versement mensuel</div>
+        <div class="field-row">
+          <input type="range" id="s_monthly" min="0" max="2000" step="50" value="200" />
+          <span class="field-val"><span id="o_monthly">200</span> €</span>
+        </div>
+      </div>
+      <div>
+        <div class="field-label">Taux annuel</div>
+        <div class="field-row">
+          <input type="range" id="s_rate" min="0.5" max="15" step="0.1" value="7" />
+          <span class="field-val"><span id="o_rate">7,0</span> %</span>
+        </div>
+        <div class="field-label">Durée</div>
+        <div class="field-row">
+          <input type="range" id="s_years" min="1" max="40" step="1" value="20" />
+          <span class="field-val"><span id="o_years">20</span> ans</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="results-grid">
+      <div class="result-box">
+        <div class="result-box-label">Capital final</div>
+        <div class="result-box-val" id="r_total">—</div>
+      </div>
+      <div class="result-box">
+        <div class="result-box-label">Total versé</div>
+        <div class="result-box-val" id="r_invested">—</div>
+      </div>
+      <div class="result-box">
+        <div class="result-box-label">Intérêts générés</div>
+        <div class="result-box-val green" id="r_interests">—</div>
+      </div>
+    </div>
+
+    <div class="chart-section">
+      <div class="chart-legend">
+        <span><b style="background:#378ADD"></b> Capital total</span>
+        <span><b style="background:#c8c6bd"></b> Apports cumulés</span>
+        <span><b style="background:#1D9E75"></b> Intérêts seuls</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="sim_chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADSENSE (remplacer par le vrai bloc) -->
+  <div class="ad-placeholder">Espace publicitaire — Google AdSense</div>
+
+  <!-- SEO CONTENT -->
+  <div class="content-section">
+    <h2>Comprendre les intérêts composés</h2>
+    <p>Les intérêts composés sont souvent présentés comme la "huitième merveille du monde", une formule attribuée à Albert Einstein. Le principe est simple : les intérêts que vous gagnez génèrent eux-mêmes des intérêts. C'est ce mécanisme de capitalisation qui permet à une épargne modeste de devenir un capital significatif sur le long terme.</p>
+    <p>Contrairement aux intérêts simples — calculés uniquement sur le capital initial — les intérêts composés s'appliquent à un capital qui grossit chaque année. La différence peut sembler anodine sur 5 ans, mais elle devient spectaculaire sur 20 ou 30 ans.</p>
+
+    <h3>La formule mathématique</h3>
+    <p>Pour un investissement avec versements mensuels réguliers, le calcul combine deux composantes :</p>
+    <div class="formula-box">
+      Capital final = C₀ × (1 + r)ⁿ + M × [(1 + r)ⁿ - 1] / r
+    </div>
+    <p>Où <strong>C₀</strong> est le capital initial, <strong>r</strong> le taux mensuel (taux annuel ÷ 12), <strong>n</strong> le nombre de mois, et <strong>M</strong> le versement mensuel.</p>
+
+    <h3>À quel taux de rendement s'attendre ?</h3>
+    <ul>
+      <li>Livret A : 3% en 2024 (taux réglementé, plafond limité)</li>
+      <li>Assurance-vie fonds euros : 2,5 à 4% selon les contrats</li>
+      <li>ETF actions mondiales (type MSCI World) : 7 à 10% historiquement sur 20+ ans</li>
+      <li>PEA investi en ETF : idem, avec avantage fiscal après 5 ans</li>
+      <li>Immobilier locatif : 3 à 6% net selon la ville et le type de bien</li>
+    </ul>
+  </div>
+
+  <div class="content-section">
+    <h2>Pourquoi commencer tôt fait toute la différence</h2>
+    <p>Le facteur le plus puissant dans le mécanisme des intérêts composés n'est pas le montant investi, ni même le taux de rendement : c'est le temps. Plus vous démarrez tôt, plus vous laissez au mécanisme de capitalisation le temps de produire ses effets exponentiels.</p>
+    <p>Un exemple concret : avec un rendement de 7% par an, une somme double en un peu moins de 10 ans (règle des 72). Sur 30 ans, 10 000 € initiaux deviennent près de 76 000 € sans verser un centime de plus. Avec des versements mensuels de 200 €, ce capital dépasse 240 000 €.</p>
+  </div>
+
+  <!-- ADSENSE -->
+  <div class="ad-placeholder">Espace publicitaire — Google AdSense</div>
+
+  <!-- FAQ -->
+  <div class="content-section">
+    <h2>Questions fréquentes</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Quelle est la différence entre intérêts simples et intérêts composés ?</div>
+      <div class="faq-a">Les intérêts simples sont calculés uniquement sur le capital de départ. Les intérêts composés sont calculés sur le capital augmenté des intérêts déjà accumulés. Sur le long terme, la différence est considérable : avec 10 000 € à 7% pendant 20 ans, les intérêts simples donnent 24 000 €, les intérêts composés donnent 38 700 €.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Ce simulateur prend-il en compte les impôts et les frais ?</div>
+      <div class="faq-a">Non, ce simulateur calcule un rendement brut sans fiscalité ni frais de gestion. En pratique, pensez à déduire les frais annuels de votre placement (souvent 0,2 à 1% pour un ETF) et à tenir compte de la flat tax de 30% sur les gains à la sortie, sauf dans le cadre d'un PEA fiscalement avantageux.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Quelle fréquence de capitalisation est utilisée ici ?</div>
+      <div class="faq-a">Ce simulateur utilise une capitalisation mensuelle, ce qui correspond à la fréquence la plus courante pour les placements avec versements réguliers. Les versements sont ajoutés au début de chaque mois et les intérêts sont calculés en conséquence.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Quel placement utilise concrètement les intérêts composés ?</div>
+      <div class="faq-a">En France, le PEA (Plan d'Épargne en Actions) investi dans des ETF est l'enveloppe la plus recommandée pour profiter des intérêts composés sur le long terme. L'assurance-vie, le compte-titres et même le Livret A fonctionnent aussi sur ce principe, avec des rendements différents.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Comment atteindre l'indépendance financière grâce aux intérêts composés ?</div>
+      <div class="faq-a">Le principe FIRE (Financial Independence, Retire Early) repose entièrement sur les intérêts composés. L'objectif est d'accumuler un capital égal à 25× ses dépenses annuelles. Avec un taux de retrait de 4% par an, ce capital se maintient statistiquement indéfiniment. Notre simulateur vous permet de calculer combien d'années il vous faudra selon votre capacité d'épargne.</div>
+    </div>
+  </div>
+
+  <!-- CTA affiliation (à personnaliser) -->
+  <div class="cta-box">
+    <h2>Prêt à faire travailler votre argent ?</h2>
+    <p>Ouvrez un PEA ou un compte-titres chez un courtier en ligne et commencez à investir en quelques minutes.</p>
+    <a class="cta-btn" href="https://votre-lien-affiliation.fr" rel="nofollow sponsored">Comparer les courtiers →</a>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2026 simulateur-finances.fr — Outil gratuit à titre informatif, ne constitue pas un conseil en investissement.</p>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+  let chart;
+
+  function fmt(n) {
+    return Math.round(n).toLocaleString('fr-FR') + ' €';
+  }
+  function fmtK(n) {
+    if (n >= 1000000) return (Math.round(n / 10000) / 100) + 'M€';
+    if (n >= 1000) return (Math.round(n / 100) / 10) + 'k€';
+    return Math.round(n) + '€';
+  }
+
+  function compute() {
+    const capital = +document.getElementById('s_capital').value;
+    const monthly = +document.getElementById('s_monthly').value;
+    const rate = +document.getElementById('s_rate').value / 100;
+    const years = +document.getElementById('s_years').value;
+
+    document.getElementById('o_capital').textContent = Math.round(capital).toLocaleString('fr-FR');
+    document.getElementById('o_monthly').textContent = Math.round(monthly).toLocaleString('fr-FR');
+    const rateDisp = (rate * 100);
+    document.getElementById('o_rate').textContent = Number.isInteger(rateDisp * 10) ? rateDisp.toFixed(1).replace('.', ',') : rateDisp.toFixed(1).replace('.', ',');
+    document.getElementById('o_years').textContent = years;
+
+    const mr = rate / 12;
+    const labels = [], totals = [], invested = [], interests = [];
+    let bal = capital;
+
+    for (let y = 0; y <= years; y++) {
+      const totalIn = capital + monthly * 12 * y;
+      labels.push(y === 0 ? 'Départ' : 'Année ' + y);
+      totals.push(Math.round(bal));
+      invested.push(Math.round(totalIn));
+      interests.push(Math.round(Math.max(0, bal - totalIn)));
+      if (y < years) for (let m = 0; m < 12; m++) bal = bal * (1 + mr) + monthly;
+    }
+
+    const totalInvested = capital + monthly * 12 * years;
+    document.getElementById('r_total').textContent = fmt(bal);
+    document.getElementById('r_invested').textContent = fmt(totalInvested);
+    document.getElementById('r_interests').textContent = fmt(Math.max(0, bal - totalInvested));
+
+    if (chart) chart.destroy();
+    chart = new Chart(document.getElementById('sim_chart'), {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          { label: 'Capital total', data: totals, borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.1)', fill: true, tension: 0.3, pointRadius: 0, borderWidth: 2 },
+          { label: 'Apports cumulés', data: invested, borderColor: '#c8c6bd', backgroundColor: 'rgba(180,178,165,0.08)', fill: true, tension: 0.3, pointRadius: 0, borderWidth: 1.5, borderDash: [4, 3] },
+          { label: 'Intérêts seuls', data: interests, borderColor: '#1D9E75', backgroundColor: 'rgba(29,158,117,0.07)', fill: true, tension: 0.3, pointRadius: 0, borderWidth: 1.5 }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => ' ' + ctx.dataset.label + ' : ' + Math.round(ctx.parsed.y).toLocaleString('fr-FR') + ' €'
+            }
+          }
+        },
+        scales: {
+          x: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#888', font: { size: 11 }, autoSkip: true, maxTicksLimit: 9 } },
+          y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { color: '#888', font: { size: 11 }, callback: v => fmtK(v) } }
+        }
+      }
+    });
+  }
+
+  ['s_capital', 's_monthly', 's_rate', 's_years'].forEach(id => {
+    document.getElementById(id).addEventListener('input', compute);
+  });
+
+  compute();
+</script>
+
+</body>
+</html>
